@@ -1,5 +1,5 @@
 PredCRG_training <-
-function(pos_seq, neg_seq){
+function(pos_seq, neg_seq, kern){
 
 PredCRG_Enc <-function(prot_seq){
 x1 <- prot_seq
@@ -71,7 +71,22 @@ y1 <- as.factor(c(pos_y1, neg_n1))
 colnames(pos1)<-colnames(neg1)<- paste(rep("V", 62), 2:63, sep="")
 dat <- rbind(pos1, neg1)
 
+if (kern=="laplace"){
 model <- ksvm(x=dat, y=y1, kernel="laplacedot", prob.model=TRUE)
+}
+
+if (kern=="linear"){
+model <- svm(x=dat, y=y1, kernel="linear", probability=TRUE)
+}
+
+if (kern=="polynomial"){
+model <- svm(x=dat, y=y1, kernel="polynomial", probability=TRUE)
+}
+
+if (kern=="RBF"){
+model <- svm(x=dat, y=y1, kernel="radial", probability=TRUE)
+}
+
 
 return(model)
 }
